@@ -1,8 +1,8 @@
 COPTS=-Wall -g -c  -O0 -std=c++0x
 OBJS=main.o \
 	 langlex.o \
-	 cSymbol.o \
 	 cSymbolTable.o \
+	 cHashTable.o \
 	 langparse.o
 
 all: lang

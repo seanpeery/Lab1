@@ -1,9 +1,8 @@
-// main.cpp
-// Edited by Sean Peery
+// parser
 //
-// Symbol table parser
+// Phil Howard
 //
-
+// pwhoward@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -14,17 +13,16 @@
 #include "langparse.h"
 
 extern void *yyast_root;
-cSymbolTable * symbolTableRoot;
 
 int main(int argc, char **argv)
 {
-    std::cout << "Sean Peery" << std::endl;
-    symbolTableRoot = new cSymbolTable();
-    
+    std::cout << "Philip Howard" << std::endl;
+
     const char *outfile_name;
     int result = 0;
-    
     std::streambuf *cout_buf = std::cout.rdbuf();
+
+    cSymbolTable *symbolTableRoot = cSymbolTable::CreateDefaultTable();
 
     if (argc > 1)
     {
@@ -67,5 +65,6 @@ int main(int argc, char **argv)
 
     output.close();
     std::cout.rdbuf(cout_buf);
+
     return result;
 }

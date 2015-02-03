@@ -1,17 +1,12 @@
-// lex.h
-// Edited by Sean Peery
-//
-
 #pragma once
-
 #include "cSymbolTable.h"
 #include "cSymbol.h"
-#include "langparse.h"
-
+#include "parse.h"
+int yyparse();
+int yylex();
 extern char *yytext;
 extern int yylineno;
+extern FILE *yyin;
 extern cSymbolTable *symbolTableRoot;
-extern FILE *yyin;          // input file for lexer
 extern int yyparse();
 extern int yylex();
-
