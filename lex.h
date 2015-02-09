@@ -1,11 +1,11 @@
-// lex.h
-// Edited by Sean Peery
-//
-
+//lex.h
+//Controls global variables and header connections
+//Edited by Sean Peery
+//Last edited 02/08/2015
 #pragma once
 
 #include "cSymbolTable.h"
-#include "cSymbol.h"
+#include "cAstNode.h"
 #include "langparse.h"
 
 extern char *yytext;

@@ -1,18 +1,27 @@
-// cSymbol.cpp
-// Created by Sean Peery
-
 #include "cSymbol.h"
-// Keeps track of total number of symbols created in the instance
-int cSymbol::totalSymbols = 0; 
 
-// Constructor
-// Increments number of symbols everytime called
-cSymbol::cSymbol(string symbol)
-    :m_symbol(symbol), m_label(++totalSymbols)
+int cSymbol::totalSymbols = 0;
+
+cSymbol::cSymbol(string symbol, bool type)
+    :m_symbol(symbol), m_label(++totalSymbols), m_setType(type)
 {}
 
-// Returns a string value representing the interepreted data
 string cSymbol::toString()
 {
     return "sym: "+ m_symbol + " " + std::to_string(m_label);
+}
+
+bool cSymbol::IsTyped()
+{
+    return m_setType;
+}
+
+string cSymbol::GetSymbol()
+{
+    return m_symbol;
+}
+
+void cSymbol::SetTyped()
+{
+    m_setType = true;
 }

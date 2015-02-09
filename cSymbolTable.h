@@ -1,7 +1,4 @@
-// cSymbolTable.h
-// Created by Sean Peery
-// 
-// Header file for symbol table
+
 
 #pragma once
 #include <string>
@@ -17,11 +14,14 @@ using std::list;
 class cSymbolTable 
 {
     public:
-        cSymbolTable();
-        void IncreaseScope(); //scope control
+        static cSymbolTable* GetInstance();
+        unordered_map<string,cSymbol*>* IncreaseScope(); //scope control
         void DecreaseScope();
-        cSymbol* InsertSymbol(string symbol);
+        cSymbol* InsertSymbol(string symbol, bool type = false);
+        cSymbol* Lookup(string symbol);
 
     private:
+        cSymbolTable();
         list<unordered_map<string,cSymbol*>*> m_tables;
+        static cSymbolTable* m_symbols;
 };
