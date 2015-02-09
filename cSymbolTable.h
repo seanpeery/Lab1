@@ -1,4 +1,7 @@
-
+// cSymbolTable.h
+// Created by Sean Peery
+// 
+// Header file for symbol table
 
 #pragma once
 #include <string>

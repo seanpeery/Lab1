@@ -1,3 +1,8 @@
+// cSymbol.h
+// Created by Sean Peery
+// 
+// Header file for symbols
+
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
