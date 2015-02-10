@@ -1,5 +1,5 @@
 // cSymbol.cpp
--// Created by Sean Peer
+// Created by Sean Peery
 #include "cSymbol.h"
 
 int cSymbol::totalSymbols = 0;
