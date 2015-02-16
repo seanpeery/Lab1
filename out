@@ -1,0 +1,22 @@
+BLOCK: 
+{
+DECLS:
+{
+VAR: sym: int 2 sym: aa 4
+STRUCT: DECLS:
+{
+VAR: sym: int 2 sym: aa 5
+VAR: sym: int 2 sym: bb 6
+}
+ sym: s0 7
+VAR: sym: s0 7 sym: bb 8
+}
+STMTS:
+{
+PRINT: (VarRef: sym: bb 8
+(VarRef: sym: aa 4))
+PRINT: (VarRef: sym: bb 8
+(VarRef: sym: bb 8))
+}
+}
+

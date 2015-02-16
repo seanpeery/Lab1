@@ -1,17 +1,8 @@
-//lex.h
-//Controls global variables and header connections
-//Edited by Sean Peery
-//Last edited 02/08/2015
 #pragma once
-
-#include "cSymbolTable.h"
-#include "cAstNode.h"
-#include "langparse.h"
-
+int yyparse();
+int yylex();
 extern char *yytext;
+extern int yynerrs;
 extern int yylineno;
+extern FILE *yyin;
 extern cSymbolTable *symbolTableRoot;
-extern FILE *yyin;          // input file for lexer
-extern int yyparse();
-extern int yylex();
-
