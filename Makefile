@@ -1,9 +1,10 @@
-COPTS=-Wall -g -c  -O0 -std=c++0x
+COPTS=-Wall -g -c  -O0 -std=c++0x -Wno-reorder
 OBJS=main.o \
 	 langlex.o \
 	 cSymbolTable.o \
+	 cSymbol.o \
 	 langparse.o
-
+	 
 all: lang
 
 clean:
@@ -26,11 +27,11 @@ main.o: main.cpp langparse.c langlex.c
 langlex.c: lang.l langparse.c
 	flex -o langlex.c lang.l
 
+langlex.o: langlex.c langparse.c
+	g++ $(COPTS) -Wno-sign-compare langlex.c -o $@
+
 langparse.c: lang.y
 	bison --defines=langparse.h lang.y -o langparse.c
-
-langlex.o: langlex.c 
-	g++ $(COPTS) -Wno-sign-compare langlex.c -o $@
 
 lang: $(OBJS)
 	g++ $(OBJS) -o lang

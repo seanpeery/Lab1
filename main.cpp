@@ -1,32 +1,30 @@
-//***********************************************************************
-// Purpose: main routine for LANG compiler
+// main.cpp
+// Edited by Sean Peery
 //
-// Author: Philip Howard
-// Email:  phil.howard@oit.edu
+// Lab5
 //
-// Date: 2/7/2015
-//
-//***********************************************************************
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include "cSymbolTable.h"
+
 #include "lex.h"
-#include "cAstNode.h"
-#include "langparse.h"
 
 extern cAstNode *yyast_root;
+cSymbolTable * symbolTableRoot;
 
 int main(int argc, char **argv)
 {
+    symbolTableRoot = cSymbolTable::GetInstance();
+   
     std::cout << "Sean Peery" << std::endl;
-
+   
     const char *outfile_name;
     int result = 0;
+    
     std::streambuf *cout_buf = std::cout.rdbuf();
 
-    // set up input based on argv[1]
     if (argc > 1)
     {
         yyin = fopen(argv[1], "r");
@@ -37,7 +35,6 @@ int main(int argc, char **argv)
         }
     }
 
-    // setup output based on argv[2]
     if (argc > 2)
     {
         outfile_name = argv[2];
@@ -53,24 +50,24 @@ int main(int argc, char **argv)
     }
     std::cout.rdbuf(output.rdbuf());
 
-    // parse the source file
     result = yyparse();
-    if (result == 0)
+    
+    if (yyast_root != NULL)
     {
-        // print the AST
-        std::cout << yyast_root->toString() << std::endl;
-    } else {
-        std::cout << yynerrs << " Errors in compile\n";
+        
+        if (result == 0)
+        {
+			//std::cout << "hello";
+            output << yyast_root->toString() << std::endl;
+        }
+		else
+		{
+            output << std::to_string(yynerrs) <<  " Errors in compile\n";
+        }
     }
 
-    if (yylex() != 0)
-    {
-        std::cout << "Junk at end of program\n";
-    }
-
-    // restore cout
     output.close();
     std::cout.rdbuf(cout_buf);
-
     return result;
+   
 }

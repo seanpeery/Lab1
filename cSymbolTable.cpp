@@ -1,99 +1,94 @@
-//***********************************************************************
-// Purpose: Implementation of the Symbol Table
-//
-// Author: Philip Howard
-// Email:  phil.howard@oit.edu
-//
-// Date: 2/7/2015
-//
-//***********************************************************************
-#include <assert.h>
-#include "cSymbol.h"
-#include "cScope.h"
+// cSymbolTable.cpp
+// Created by Sean Peery
+
 #include "cSymbolTable.h"
 
+//Initialize a symbol table
+cSymbolTable* cSymbolTable::m_symbols = nullptr;
 
-int cSymbol::totalSymbols = 0;              // total symbols created
+// Constructor
+cSymbolTable::cSymbolTable()
+{
+    m_tables.push_front(new map<string,cSymbol*>());
+        
+    cSymbol* global = new cSymbol("char", true);
+    global->SetTypeRef("char", "char", nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("char", global));
+    
+    global = new cSymbol("int", true);
+    global->SetTypeRef("int", "int", nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("int", global));
+    
+    global = new cSymbol("float", true);
+    global->SetTypeRef("float","float",nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("float", global));
+}
 
-//*******************************************
-cSymbolTable::cSymbolTable() 
+cSymbolTable* cSymbolTable::GetInstance()
 {
-    mScope = new cScope(NULL);
+    if(m_symbols == nullptr)
+        m_symbols = new cSymbolTable();
+    
+    return m_symbols;
 }
-//*******************************************
-// create and return new symbol.
-// If symbol already exists, return pointer to that symbol instead of creating
-// a new one.
-cSymbol *cSymbolTable::Insert(std::string name)
-{
-    // only check if symbol is in local table.
-    // If we are defining a symbol that exists in an outer scope,
-    // we still want to define a symbol in this scope.
-    cSymbol *symbol = LocalLookup(name);
 
-	
-    // if symbol doesn't already exist, create a new one
-    if (symbol == NULL)
-    {
-        symbol = new cSymbol(name);
-        assert(symbol != NULL);
+map<string,cSymbol*>* cSymbolTable::IncreaseScope()
+{
+    map<string,cSymbol*> * newMap = new map<string,cSymbol*>();
+    //Add symbol table to list
+    m_tables.push_front(newMap);
+    return newMap;
+}
 
-        mScope->Insert(name, symbol);
-    }
-	//else
-		//semantic_error(name);
-	// Could use an else to return a NULL if symbol already exists
-    return symbol;
-}
-//*******************************************
-// Look for a symbol. Return NULL if not found
-cSymbol *cSymbolTable::LocalLookup(std::string name)
-{
-    return mScope->Lookup(name);
-}
-//*******************************************
-// Look for a symbol. Return NULL if not found
-cSymbol *cSymbolTable::Lookup(std::string name)
-{
-    cScope *scope = mScope;
-    cSymbol *symbol = NULL;
-    while (symbol == NULL && scope != NULL)
-    {
-        symbol = scope->Lookup(name);
-        scope = scope->Parent();
-    }
-
-    return symbol;
-}
-//*******************************************
-// Increase the scoping level. Save pointer to old (outer) scoping level.
-// Return pointer to new symtab
-void cSymbolTable::IncreaseScope()
-{
-    mScope = new cScope(mScope);
-}
-//*******************************************
-// Decrease scoping level.
-// DON'T destroy the current table because the parse tree will have
-// references to the symbols stored here.
 void cSymbolTable::DecreaseScope()
 {
-    // MEMORY LEAK:
-    // we aren't deleteing the current table because parse tree has references
-    // to our symbols
-    
-    mScope = mScope->Parent();
+    m_tables.pop_front();
 }
-//*******************************************
-// create default symbol table including definitions for default types
-cSymbolTable *cSymbolTable::CreateDefaultTable()
+
+// Inserts symbol into the table
+cSymbol* cSymbolTable::InsertSymbol(string symbol, bool type)
 {
-    cSymbolTable *defaultTable = new cSymbolTable();
-    defaultTable->Insert("char");
-    defaultTable->Insert("int");
-    defaultTable->Insert("float");
-	//defaultTable->Insert("array");
-
-    return defaultTable;
+	cSymbol * temp;
+	map<string,cSymbol*>::iterator it = m_tables.front()->find(symbol);
+	
+	if(it == m_tables.front()->end())
+	{
+		temp = new cSymbol(symbol, type);
+		m_tables.front()->insert(std::pair<string,cSymbol*>(symbol, temp));
+	}
+	else
+		temp = it->second;
+	
+	return temp;
 }
 
+//Lookups a symbol from all symbol tables currently in list
+cSymbol* cSymbolTable::Lookup(string symbol)
+{
+    list<map<string,cSymbol*>*>::iterator tbl;
+    for(tbl = m_tables.begin(); tbl != m_tables.end(); ++tbl)
+    {
+        map<string,cSymbol*>::iterator temp = (*tbl)->find(symbol);
+        
+        if(temp != (*tbl)->end())
+            return temp->second;
+    }
+    
+    return nullptr;
+}
+
+bool cSymbolTable::LocalLookUp(string symbol)
+{
+    map<string,cSymbol*>::iterator it = m_tables.front()->find(symbol);
+    
+    if(it != m_tables.front()->end())
+        return true;
+    
+    return false;
+}
+
+void cSymbolTable::RemoveSymbol(cSymbol* symbol)
+{
+    symbol->ReduceSymbolCount();
+    m_tables.front()->erase(symbol->GetSymbol());
+}

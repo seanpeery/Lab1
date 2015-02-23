@@ -1,24 +1,22 @@
-#pragma once
-//***********************************************************************
-// Purpose: Definition of base class for all AST nodes
-//
-// Author: Philip Howard
-// Email:  phil.howard@oit.edu
-//
-// Date: 2/7/2015
-//
-//***********************************************************************
+//cAstNode.cpp
+//Author: Sean Peery
+//Last edited 02/16/2015
 
+#pragma once
 #include <iostream>
 #include <string>
+using std::string;
 
 class cAstNode
 {
-  public:
-    cAstNode() {}
-
-    // return a string representation of the class
-    virtual std::string toString() = 0;
-	virtual bool SemanticError() = 0;
+    public:
+        virtual string toString() = 0;
+        virtual bool SemanticError()
+        {
+            return m_semanticError;
+        }
+        
+        
+    protected:
+        bool m_semanticError;
 };
-
