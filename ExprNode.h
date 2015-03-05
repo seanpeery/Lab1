@@ -17,4 +17,8 @@ class ExprNode : public cAstNode
     {
       return nullptr;
     }
+	virtual	int ComputeOffsets(int base)
+	{
+		return base;
+	}
 };

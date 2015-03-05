@@ -15,13 +15,13 @@ class ParamsNode : public StmtNode
 		{
 			if(m_params.size() > 0)
 			{
-				string retVal = "(PARAM:";
+				string tempStr = "(PARAM:";
 			
-				for(auto &param : m_params)
-					retVal += param->toString()+" ";
+				for(ParamNode * param : m_params)
+					tempStr += param->toString();
 				
-				retVal += ")\n";
-				return retVal;
+				tempStr += ")\n";
+				return tempStr;
 			}
 			
 			return "";
@@ -30,6 +30,14 @@ class ParamsNode : public StmtNode
 		{
 			if(param != nullptr)
 				m_params.push_back(param);
+		}
+		
+		int ComputeOffsets(int base)
+		{
+			for(ParamNode * param : m_params)
+				param->ComputeOffsets(base);
+        
+			return base;
 		}
         
     private:

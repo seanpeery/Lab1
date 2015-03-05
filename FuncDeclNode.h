@@ -13,27 +13,29 @@ class FuncDeclNode : public DeclNode
 {
     public:
         FuncDeclNode(cSymbol* header = nullptr, ParamsSpecNode* params = nullptr)
-		    :m_header(header), m_params(params), m_decls(nullptr), m_stmts(nullptr)
-		{}
+		    :m_header(header), m_paramsSpec(params), m_decls(nullptr), m_stmts(nullptr)
+		{ }
 		
         string toString()
 		{
-			string retVal = "(FUNC: " + m_header->toString();
+			string tempStr = "(FUNC: " + m_header->toString();
 			
-			if(m_params != nullptr)
-				retVal += " " + m_params->toString();
+			if(m_paramsSpec != nullptr)
+				tempStr += m_paramsSpec->toString();
 			else
-				retVal += "()";
+				tempStr += "()";
 				
 			if(m_decls != nullptr)
-				retVal += "\n" + m_decls->toString();
+				tempStr += "\n" + m_decls->toString();
 			
 			if(m_stmts != nullptr)
-				retVal += "\n" + m_stmts->toString();
+				tempStr += "\n" + m_stmts->toString();
 			
-			retVal += "\n)";
+			tempStr += "\nsize: " + std::to_string(m_size);
 			
-			return retVal;
+			tempStr += "\n)";
+			
+			return tempStr;
 		}
 		
         void SetStmts(StmtsNode* stmts = nullptr)
@@ -45,10 +47,33 @@ class FuncDeclNode : public DeclNode
 		{
 			m_decls = decls;
 		}
+
+		int ComputeOffsets(int base)
+		{
+			m_offset = 0;
+			int tempHolder = 0;
+			if(m_paramsSpec != nullptr)
+			{
+			   tempHolder = m_paramsSpec->ComputeOffsets(m_offset);
+			   m_offset = tempHolder;
+			}
+			if(m_decls != nullptr)
+				m_offset = m_decls->ComputeOffsets(m_offset);
+
+			if(m_stmts != nullptr)
+				m_offset = m_stmts->ComputeOffsets(m_offset);
+
+			m_size = m_offset - tempHolder;
+			return base;
+		}
+		int GetSize()
+		{
+			return m_header->GetSize();
+		}
 			
     private:
         cSymbol* m_header;
-        ParamsSpecNode* m_params;
+        ParamsSpecNode* m_paramsSpec;
         DeclsNode*  m_decls;
         StmtsNode*  m_stmts;
 };

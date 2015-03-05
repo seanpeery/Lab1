@@ -14,22 +14,17 @@ class StructDeclNode : public DeclNode
     public:
         StructDeclNode(map<string,cSymbol*>* symTable = nullptr, DeclsNode* decls = nullptr, cSymbol* identifier = nullptr)
             :m_symTable(symTable), m_decls(decls), m_identifier(identifier)
-		{}
+		{
+			m_identifier->InitializeSize(m_decls->GetSize());
+		}
 		
 		string toString()
 		{
-			string retVal = "STRUCT: ";
+			string tempStr = "STRUCT: ";
 			
-			retVal += m_decls->toString() + " " + m_identifier->toString();
-			
-			return retVal;
-		}
-		
-        void PrintSymbolTable()
-		{
-			std::cout << "My table for " << m_identifier->GetSymbol() << " holds" << std::endl;
-			for(auto &sym : *m_symTable)
-				std::cout << sym.second->GetSymbol() << std::endl;
+			tempStr += m_decls->toString() + " " + m_identifier->toString();
+			tempStr += " size: " + std::to_string(m_size);
+			return tempStr;
 		}
 		
         cSymbol* Find(string symbol)
@@ -44,6 +39,24 @@ class StructDeclNode : public DeclNode
 			}
 			
 			return retVal;
+		}
+
+		int ComputeOffsets(int base)
+		{    
+			m_offset = 0;
+			m_size = m_decls->ComputeOffsets(m_offset);
+			
+			m_offset = m_decls->CalculateOffset(base);
+        
+			return base;
+		}
+		int FindSymbolOffset(cSymbol* symbol)
+		{
+			return m_decls->FindSymbolOffset(symbol);
+		}
+		int GetSize()
+		{
+			return m_identifier->GetSize();
 		}
     
     private:

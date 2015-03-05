@@ -14,19 +14,31 @@ class ParamsSpecNode : public StmtNode
 		
         string toString()
 		{
-			string retVal = "(PARAMS:";
+			string tempStr = "(PARAMS:";
 			
-			for(auto &param : m_params)
-				retVal += " " +param->toString();
+			for(ParamSpecNode * param : m_params)
+				tempStr += param->toString() + " ";
 			
-			retVal += ")\n";
+			tempStr += ")\n";
 			
-			return retVal;
+			return tempStr;
 		}
 
         void Add(ParamSpecNode* param = nullptr)
 		{
 			m_params.push_back(param);
+		}
+
+		int ComputeOffsets(int base)
+		{
+			
+			m_offset = base;
+			for(ParamSpecNode * param : m_params)
+			{
+				m_offset = param->ComputeOffsets(m_offset);
+			}
+			base = m_offset;
+			return base;
 		}
         
     private:

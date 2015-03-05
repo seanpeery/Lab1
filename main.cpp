@@ -1,7 +1,7 @@
 // main.cpp
 // Edited by Sean Peery
 //
-// Lab5
+// Lab6
 //
 
 #include <stdio.h>
@@ -58,6 +58,7 @@ int main(int argc, char **argv)
         if (result == 0)
         {
 			//std::cout << "hello";
+			yyast_root->ComputeOffsets(0);
             output << yyast_root->toString() << std::endl;
         }
 		else

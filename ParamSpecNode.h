@@ -5,6 +5,7 @@
 
 #include <string>
 #include "VarNode.h"
+#include "StmtNode.h"
 using std::string;
 
 class ParamSpecNode
@@ -16,6 +17,11 @@ class ParamSpecNode
         string toString()
 		{
 			return m_param->toString();
+		}
+
+		int ComputeOffsets(int base)
+		{
+			return m_param->ComputeOffsets(base);
 		}
     
     private:

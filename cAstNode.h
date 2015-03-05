@@ -15,8 +15,17 @@ class cAstNode
         {
             return m_semanticError;
         }
-        
-        
+		virtual int ComputeOffsets(int base)  = 0;
+
+        int CeilMod4(int base)
+        {//Raises the value to the next number divisible by 4
+            while((base % 4) != 0)
+                base++;
+            return base;
+        }
+		
     protected:
         bool m_semanticError;
+		int m_offset;
+        int m_size;
 };

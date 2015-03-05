@@ -10,18 +10,18 @@
 class VarPartNode : public ExprNode
 {
     public:
-        VarPartNode(cSymbol* identifier = nullptr, ArrayValNode* ary = nullptr)
-		    :m_identifier(identifier), m_ary(ary)
-		{}
+        VarPartNode(cSymbol* identifier = nullptr, ArrayValNode* newArray = nullptr)
+		    :m_identifier(identifier), m_array(newArray)
+		{ }
 		
         string toString()
 		{
-			string retVal = m_identifier->toString();
+			string tempStr = m_identifier->toString();
 			
-			if(m_ary != nullptr)
-				retVal += "[" + m_ary->toString() + "]";
+			if(m_array != nullptr)
+				tempStr += "[" + m_array->toString() + "]";
 			
-			return retVal;
+			return tempStr;
 		}
 
         string GetType()
@@ -46,7 +46,7 @@ class VarPartNode : public ExprNode
 		
         string GetBaseType()
 		{
-			if(m_ary != nullptr)
+			if(m_array != nullptr)
 				return m_identifier->GetBaseType();
 			else
 				return GetType();
@@ -59,5 +59,5 @@ class VarPartNode : public ExprNode
         
     private:
         cSymbol* m_identifier;
-        ArrayValNode* m_ary;
+        ArrayValNode* m_array;
 };

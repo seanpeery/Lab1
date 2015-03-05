@@ -16,7 +16,11 @@ class PrintNode: public StmtNode
 		{
 			return "PRINT: " + m_expr->toString();
 		}
-			
+		int ComputeOffsets(int base)
+		{
+		    m_expr->ComputeOffsets(base);
+			return base;
+		}
     private:
         ExprNode* m_expr;
 };

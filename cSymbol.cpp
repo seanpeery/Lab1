@@ -62,3 +62,13 @@ void cSymbol::ReduceSymbolCount()
 {
     symbolCount--;
 }
+
+int cSymbol::GetSize()
+{
+    return m_size;
+}
+
+void cSymbol::InitializeSize(int size)
+{
+	m_size = size;
+}

@@ -21,7 +21,9 @@ class cSymbol
     string GetBaseType();
     DeclNode* GetRef();
     void ReduceSymbolCount();
-    
+    int GetSize();
+	void InitializeSize(int size);
+	
   private:
     string m_symbol;
     int m_sequence;
@@ -31,4 +33,5 @@ class cSymbol
     string m_typeRef;
     DeclNode* m_decl;
     string m_baseType;
+	int m_size;
 };

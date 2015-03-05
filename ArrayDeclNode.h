@@ -1,3 +1,6 @@
+// ArrayDeclNode.h
+// Author: Sean Peery
+
 #pragma once
 
 #include "DeclNode.h"
@@ -9,17 +12,35 @@ class ArrayDeclNode : public DeclNode
     public:
         ArrayDeclNode(cSymbol* typeId = nullptr, cSymbol* identifier = nullptr, ArraySpecNode* array = nullptr)
             :m_typeId(typeId), m_identifier(identifier), m_array(array)
-		{}
+		{
+			m_identifier->InitializeSize(m_typeId->GetSize() * m_array->GetSize());
+		}
 
 		string toString()
 		{
-			string retVal = "ARRAY: ";
+			string tempStr = "ARRAY: ";
 			
-			retVal += m_typeId->toString() + " " + m_identifier->toString();
+			tempStr += m_typeId->toString() + " " + m_identifier->toString();
 			if(m_array != nullptr)
-				retVal += " " + m_array->toString();
+				tempStr += " " + m_array->toString();
+				
+			tempStr += " size: " + std::to_string(m_size);
+			tempStr += " offset: " + std::to_string(m_offset);
+		
+			return tempStr;
+		}
+	
+		int ComputeOffsets(int base)
+		{
+		    m_offset = base;
+			m_size = m_identifier->GetSize();
 			
-			return retVal;
+			base = m_offset + m_size;
+			return base;
+		}
+		int GetSize()
+		{
+			return m_identifier->GetSize();
 		}
 		
     private:

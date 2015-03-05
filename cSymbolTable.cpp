@@ -13,14 +13,17 @@ cSymbolTable::cSymbolTable()
         
     cSymbol* global = new cSymbol("char", true);
     global->SetTypeRef("char", "char", nullptr);
+	global->InitializeSize(1);
     m_tables.front()->insert(std::pair<string,cSymbol*>("char", global));
     
     global = new cSymbol("int", true);
     global->SetTypeRef("int", "int", nullptr);
+	global->InitializeSize(4);
     m_tables.front()->insert(std::pair<string,cSymbol*>("int", global));
     
     global = new cSymbol("float", true);
     global->SetTypeRef("float","float",nullptr);
+	global->InitializeSize(8);
     m_tables.front()->insert(std::pair<string,cSymbol*>("float", global));
 }
 

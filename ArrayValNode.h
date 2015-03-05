@@ -1,7 +1,8 @@
+// ArrayValNode.h
+// Author: Sean Peery
 #pragma once
 
 #include <list>
-#include <string>
 #include "ExprNode.h"
 using std::list;
 using std::string;
@@ -21,14 +22,14 @@ class ArrayValNode
 		{
 			string retVal = "(ARRAYVAL:";
 			
-			for(auto &expr : m_val)
+			for(ExprNode * expr : m_val)
 				retVal += " " + expr->toString();
 			
 			retVal += ")";
 			
 			return retVal;
 		}
-        
+		
     private:
         list<ExprNode*> m_val;
 };

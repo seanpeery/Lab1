@@ -1,3 +1,6 @@
+// BinaryExprNode.h
+// Author: Sean Peery
+
 #pragma once
 
 #include <math.h>
@@ -6,7 +9,7 @@
 class BinaryExprNode : public ExprNode
 {
     public:
-        BinaryExprNode(ExprNode* lhs = nullptr, char oper = '~', ExprNode* rhs = nullptr)
+        BinaryExprNode(ExprNode* lhs = nullptr, char oper = '-', ExprNode* rhs = nullptr)
 		    :m_lhs(lhs), m_oper(oper), m_rhs(rhs)
 		{}
         string toString()
@@ -25,6 +28,14 @@ class BinaryExprNode : public ExprNode
         string GetBaseType()
 		{
 			return GetType();
+		}
+		
+		int ComputeOffsets(int base)
+		{
+			m_lhs->ComputeOffsets(base);
+			m_rhs->ComputeOffsets(base);
+			
+			return base;
 		}
     
     private:

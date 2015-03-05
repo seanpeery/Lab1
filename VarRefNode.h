@@ -15,52 +15,54 @@ class VarRefNode : public ExprNode
     public:
         VarRefNode()
 		    :m_error("")
-		{}
+		{ }
         string toString()
 		{
-			string retVal = "";
-			
+			string tempStr = "";
 			list<VarPartNode*>::iterator it;
 			
-			for(it = m_parts.begin(); it != m_parts.end(); ++it )
+			for(it = m_varParts.begin(); it != m_varParts.end(); ++it )
 			{
-				retVal += "(VarRef: " + (*it)->toString() + " ";
+				tempStr += "(VarRef: " + (*it)->toString() + " ";
 			}
 			
-			for(size_t i = 0; i < m_parts.size(); ++i)
-				retVal += ")";
+			for(size_t i = 0; i < m_varParts.size() - 1; ++i)
+				tempStr += ")";
 			
-			return retVal;
+			tempStr += "size: " + std::to_string(m_size);
+			tempStr += " offset: " + std::to_string(m_offset);
+			tempStr += ")";
+			
+			return tempStr;
 		}
 		
-        void Add(VarPartNode* part = nullptr)
+        void Add(VarPartNode* varPart = nullptr)
 		{
 			m_semanticError = false;
-			
-			if(m_parts.size() == 0)
+			if(m_varParts.size() == 0)
 			{
-				if(!part->GetIdentifier()->IsDeclared())
+				if(!varPart->GetIdentifier()->IsDeclared())
 				{
-					m_error = "Symbol " + part->GetIdentifier()->GetSymbol() + " not defined";
+					m_error = "Symbol " + varPart->GetIdentifier()->GetSymbol() + " not defined";
 					m_semanticError = true;
 				}
 			}
 			else
-				m_semanticError = FindSymbolInParent(part);
+				m_semanticError = FindSymbolInParent(varPart);
 			
 			if(!m_semanticError)
-				m_parts.push_back(part);
+				m_varParts.push_back(varPart);
 			
 		}
 
         string GetType()
 		{
-			return (*m_parts.rbegin())->GetType();
+			return (*m_varParts.rbegin())->GetType();
 		}
 
         DeclNode* GetTypeRef()
 		{
-			return (*m_parts.rbegin())->GetTypeRef();
+			return (*m_varParts.rbegin())->GetTypeRef();
 		}
 		
         string GetErrorMsg()
@@ -71,8 +73,8 @@ class VarRefNode : public ExprNode
         string Vref()
 		{
 			string vref = "";
-			int count = m_parts.size() - 1;
-			for(list<VarPartNode*>::iterator i = m_parts.begin(); i != m_parts.end(); ++i, --count)
+			int count = m_varParts.size() - 1;
+			for(list<VarPartNode*>::iterator i = m_varParts.begin(); i != m_varParts.end(); ++i, --count)
 			{
 				if(count == 0)
 					vref += (*i)->GetIdentifier()->GetSymbol();
@@ -85,7 +87,7 @@ class VarRefNode : public ExprNode
         bool FindSymbolInParent(VarPartNode* part)
 		{
 			cSymbol* sym = nullptr;
-			VarPartNode* vp = *(m_parts.rbegin());
+			VarPartNode* vp = *(m_varParts.rbegin());
 			StructDeclNode* struc = nullptr;
 			try
 			{
@@ -119,15 +121,40 @@ class VarRefNode : public ExprNode
 
         string GetBaseType()
 		{
-			return (*m_parts.rbegin())->GetBaseType();
+			return (*m_varParts.rbegin())->GetBaseType();
 		}
 
         string GetSymbol()
 		{
-			return (*m_parts.rbegin())->GetSymbol();
+			return (*m_varParts.rbegin())->GetSymbol();
+		}
+
+		int ComputeOffsets(int base)
+		{    
+//		std::cout<< "\nbase"<< (*m_varParts.rbegin())->GetTypeRef()->GetCalculatedOffset() << "\n";
+			m_size = (*m_varParts.rbegin())->GetTypeRef()->GetCalculatedSize();
+			m_offset = (*m_varParts.begin())->GetTypeRef()->GetCalculatedOffset();
+
+			if(m_varParts.size() > 1)
+			{
+				DeclNode* decl = (*m_varParts.begin())->GetTypeRef();
+				m_offset = decl->GetCalculatedOffset();
+				list<VarPartNode*>::iterator iter = m_varParts.begin();
+				for(++iter; iter != m_varParts.end(); ++iter)
+				{
+					StructDeclNode* strucDecl = dynamic_cast<StructDeclNode*>(decl);
+
+					if(strucDecl != nullptr)
+						m_offset += strucDecl->FindSymbolOffset((*iter)->GetIdentifier());
+					else
+						m_offset += decl->GetCalculatedOffset();
+					decl = (*iter)->GetTypeRef();
+				}
+			}
+			return base;
 		}
 			
     private:
-        list<VarPartNode*> m_parts;
+        list<VarPartNode*> m_varParts;
         string m_error;
 };

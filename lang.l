@@ -55,10 +55,7 @@ whitespace		[' '\t\n\r]
                                     
                                 RETURN(IDENTIFIER);
                             }
-{ident}						{
-								yylval.symbol = symbolTableRoot->InsertSymbol(yytext);
-								return (IDENTIFIER);
-							}
+
 {integer}					{
                                 yylval.int_val = atoi(yytext);
                                 RETURN(INT_VAL);

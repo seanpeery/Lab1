@@ -15,16 +15,24 @@ class StmtsNode : public cAstNode
 		{}
         string toString()
 		{
-			string retVal = "STMTS:\n{\n";
-			for(auto &stmt : m_stmts)
-				retVal += stmt->toString()+ "\n";
-			retVal += "}";
-			return retVal;
+			string tempStr = "STMTS:\n{\n";
+			for(StmtNode * stmt : m_stmts)
+				tempStr += stmt->toString()+ "\n";
+			tempStr += "}\n";
+			return tempStr;
 		}
 
         void Add(StmtNode* data = nullptr)
 		{
 			m_stmts.push_back(data);
+		}
+		int ComputeOffsets(int base)
+		{
+		    m_offset = base;
+			for(StmtNode * stmt : m_stmts)
+				m_offset = stmt->ComputeOffsets(m_offset);
+
+			return base;
 		}
         
     private:

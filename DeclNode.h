@@ -2,12 +2,21 @@
 // Author: Sean Peery
 
 #pragma once
-
+#include "cAstNode.h"
 #include <string>
 using std::string;
 
-class DeclNode
+class DeclNode : public cAstNode
 {
     public:
-        virtual string toString() = 0;
+		virtual int GetSize() = 0;
+        int GetCalculatedSize()
+        {
+            return m_size;
+        }
+        
+        int GetCalculatedOffset()
+        {
+            return m_offset;
+        }		
 };

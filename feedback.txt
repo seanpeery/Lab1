@@ -1,0 +1,10 @@
+//*************************************
+Lab 5 feedback
+
+-5 your feedback file should have feedback from previous labs
+
+-5 It is not correct to use the first character of a type name to decide equivalence. It appears that your code would treat a struct named "float_struct" as if the base type was a float.
+
+Late: -20%
+
+

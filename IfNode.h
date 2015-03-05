@@ -14,14 +14,22 @@ class IfNode: public StmtNode
 		{}
         string toString()
 		{
-			string retVal = "(IF: " + m_expr->toString() + "\n" + m_stmt1->toString() + "\n";
+			string tempStr = "(IF: " + m_expr->toString() + "\n" + m_stmt1->toString() + "\n";
 			
 			if(m_stmt2 != nullptr)
-				retVal += "ELSE:\n" + m_stmt2->toString() + "\n";
+				tempStr += "ELSE:\n" + m_stmt2->toString() + "\n";
 			
-			retVal += ")";
+			tempStr += ")";
 			
-			return retVal;
+			return tempStr;
+		}
+		
+		int ComputeOffsets(int base)
+		{
+			m_expr->ComputeOffsets(base);
+			m_stmt1->ComputeOffsets(base);
+			m_stmt2->ComputeOffsets(base);
+			return base;
 		}
     
     private:

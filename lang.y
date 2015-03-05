@@ -137,8 +137,12 @@ var_decl:   TYPE_ID IDENTIFIER
                                     {
                                         $2 = symbolTableRoot->InsertSymbol($2->GetSymbol());
                                         $2->SetDeclared();
+										$2->InitializeSize($1->GetSize());
                                         $$ = new VarNode($1, $2);
-                                        $2->SetTypeRef($1->GetType(), $1->GetBaseType(), $1->GetRef());
+										DeclNode* decl = $1->GetRef();
+                                        if(decl == nullptr)
+                                            decl = $$;
+                                        $2->SetTypeRef($1->GetType(), $1->GetBaseType(), decl);
                                     }
                                 }
 array_decl:   ARRAY TYPE_ID IDENTIFIER arrayspec
@@ -214,6 +218,7 @@ func_prefix: TYPE_ID IDENTIFIER '('
                                     {
                                         $$ = symbolTableRoot->InsertSymbol($2->GetSymbol());
                                         $$->SetDeclared();
+										$$->InitializeSize($1->GetSize());
                                         $$->SetTypeRef($1->GetSymbol(), $1->GetSymbol(), $1->GetRef());
                                         symbolTableRoot->IncreaseScope();
                                     }
@@ -303,8 +308,6 @@ func_call:  IDENTIFIER '(' params ')'
                                     $$ = new FuncCallNode($1, $3);                              
                                 }
 varref:   varref '.' varpart    {
-                                    //if($1 == nullptr)
-                                        //$1 = new VarRefNode();
                                     $$ = $1;
                                     $$->Add($3);
                                     if($$->SemanticError())

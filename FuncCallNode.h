@@ -22,7 +22,7 @@ class FuncCallNode : public StmtNode, public ExprNode
 			if(m_params != nullptr)
 				retVal += m_params->toString();
 				
-			retVal += ")\n";
+			retVal += ")";
 			
 			return retVal;
 		}
@@ -35,6 +35,12 @@ class FuncCallNode : public StmtNode, public ExprNode
         string GetBaseType()
 		{
 			return GetType();
+		}
+
+		int ComputeOffsets(int base)
+		{
+			m_params->ComputeOffsets(base);
+			return base;
 		}
     
     private:
