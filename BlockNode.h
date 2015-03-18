@@ -45,7 +45,16 @@ class BlockNode : public StmtNode
 			return base;
 		}
 
-    
+		void GenerateCode()
+		{
+			if(m_decls != nullptr)
+				m_decls->GenerateCode();
+			if(m_stmts != nullptr)
+				m_stmts->GenerateCode();
+				
+			generate->StackSizeDown(m_size);
+		}
+	
     private:
         map<string,cSymbol*>* m_symTable;
         DeclsNode * m_decls;

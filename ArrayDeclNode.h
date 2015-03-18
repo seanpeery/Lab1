@@ -43,6 +43,11 @@ class ArrayDeclNode : public DeclNode
 			return m_identifier->GetSize();
 		}
 		
+		void GenerateCode()
+		{
+			generate->StackSizeUp(m_size);
+		}
+		
     private:
         cSymbol* m_typeId;
         cSymbol* m_identifier;

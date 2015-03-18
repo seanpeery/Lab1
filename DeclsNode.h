@@ -15,10 +15,7 @@ class DeclsNode : public cAstNode
 {
     public:
         DeclsNode()
-		{
-			m_size = -1;
-			m_offset = -1;
-		}
+		{}
 		
         string toString()
 		{
@@ -81,7 +78,13 @@ class DeclsNode : public cAstNode
 			
 			return tempInt;
 		}
-				
+		
+		void GenerateCode()
+		{
+			for(DeclNode * decl : m_decls)
+				decl->GenerateCode();
+		}
+		
     private:
         list<DeclNode*> m_decls;
 };

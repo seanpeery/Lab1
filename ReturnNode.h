@@ -23,6 +23,17 @@ class ReturnNode: public StmtNode
 			m_expr->ComputeOffsets(base);
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			if(m_expr->GetBaseType() == "float")
+				generate->EmitString("Temp_F = ");
+			else
+				generate->EmitString("Temp = ");
+			
+			m_expr->GenerateCode();
+			generate->EmitString(";\n");
+		}
 			
     private:
         ExprNode* m_expr;

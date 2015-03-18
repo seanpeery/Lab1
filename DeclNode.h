@@ -10,6 +10,7 @@ class DeclNode : public cAstNode
 {
     public:
 		virtual int GetSize() = 0;
+		virtual void GenerateCode() = 0;
         int GetCalculatedSize()
         {
             return m_size;
@@ -18,5 +19,5 @@ class DeclNode : public cAstNode
         int GetCalculatedOffset()
         {
             return m_offset;
-        }		
+        }
 };

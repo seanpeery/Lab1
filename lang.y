@@ -292,6 +292,16 @@ stmt:       IF '(' expr ')' stmt
                                     }
                                     
                                 }
+		|   lval '=' func_call ';'
+                                {
+                                    $$ = new AssignmentNode((VarRefNode*)$1, $3);
+                                    
+                                    if($$->SemanticError())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Cannot assign\n");
+                                    }
+                                }
         |   func_call ';'       {
                                    $$ = $1;
                                 }
@@ -396,9 +406,7 @@ fact:        '(' expr ')'       {
         |   varref              {
                                    $$ = $1;
                                 }
-        |   func_call           {
-                                   $$ = $1;
-                                }
+
 
 %%
 

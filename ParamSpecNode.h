@@ -23,6 +23,11 @@ class ParamSpecNode
 		{
 			return m_param->ComputeOffsets(base);
 		}
+		
+		void GenerateCode()
+		{
+			m_param->GenerateCode();
+		}
     
     private:
         VarNode* m_param;

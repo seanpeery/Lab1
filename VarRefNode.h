@@ -153,7 +153,17 @@ class VarRefNode : public ExprNode
 			}
 			return base;
 		}
-			
+		void GenerateCode()
+		{
+			bool isFloat = false;
+			if((*m_varParts.rbegin())->GetBaseType() == "float")
+				isFloat = true;
+			generate->Reference((*m_varParts.rbegin())->GetTypeRef()->GetCalculatedOffset(), isFloat);
+		}
+		double GetValue()
+		{
+			return 0;
+		}
     private:
         list<VarPartNode*> m_varParts;
         string m_error;

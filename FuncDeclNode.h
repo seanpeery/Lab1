@@ -51,29 +51,48 @@ class FuncDeclNode : public DeclNode
 		int ComputeOffsets(int base)
 		{
 			m_offset = 0;
-			int tempHolder = 0;
+			//int tempHolder = 0;
 			if(m_paramsSpec != nullptr)
 			{
-			   tempHolder = m_paramsSpec->ComputeOffsets(m_offset);
-			   m_offset = tempHolder;
+			   m_paramSize = m_paramsSpec->ComputeOffsets(m_offset);
+			   //m_offset = tempHolder;
 			}
 			if(m_decls != nullptr)
-				m_offset = m_decls->ComputeOffsets(m_offset);
+				m_offset = m_decls->ComputeOffsets(m_paramSize);
 
 			if(m_stmts != nullptr)
 				m_offset = m_stmts->ComputeOffsets(m_offset);
 
-			m_size = m_offset - tempHolder;
+			m_size = m_offset - m_paramSize;
 			return base;
 		}
 		int GetSize()
 		{
 			return m_header->GetSize();
 		}
+		
+		void GenerateCode()
+		{
+			generate->StartFunctionOutput();
+			generate->EmitString("int " + m_header->GetSymbol() + "()\n{\n");
+			if(m_decls != nullptr)
+				m_decls->GenerateCode();
+			if(m_stmts != nullptr)
+				m_stmts->GenerateCode();
+			generate->StackSizeDown(m_size + m_paramSize);
+			generate->EmitString("}\n");
+			generate->EndFunctionOutput();
+		}
+		int GetParamsSize()
+		{
+			return m_paramSize;
+		}
+
 			
     private:
         cSymbol* m_header;
         ParamsSpecNode* m_paramsSpec;
         DeclsNode*  m_decls;
         StmtsNode*  m_stmts;
+		int m_paramSize;
 };

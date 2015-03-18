@@ -7,4 +7,16 @@ Lab 5 feedback
 
 Late: -20%
 
+//***************************************
+lab 6 Feedback
+
+-10 It appears that you do not byte align character data. Characters are byte aligned. Everything else is word aligned.
+
+-5 It appears that you did NOT word align ints as formal parameters to functions.
+
+-10 You code segfaults if you have an if statement without an else.
+
+-5 It appears that you do not compute the offsets of the statements in a while.
+
+The behavior of your code was virtually identical to that of another student's. Some of your code was also identical including choice of function names. This suggests that you are working more closely with another student that what I consider proper.
 

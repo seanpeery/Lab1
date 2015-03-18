@@ -34,7 +34,11 @@ class StmtsNode : public cAstNode
 
 			return base;
 		}
-        
+        void GenerateCode()
+		{
+			for(StmtNode *stmt : m_stmts)
+				stmt->GenerateCode();
+		}
     private:
         list<StmtNode*> m_stmts;        
 };

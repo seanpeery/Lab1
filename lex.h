@@ -36,6 +36,7 @@
 #include "AssignmentNode.h"
 #include "PrintNode.h"
 #include "langparse.h"
+#include "codegen.h"
 
 extern char *yytext;
 extern int yylineno;
@@ -44,4 +45,4 @@ extern FILE *yyin;          // input file for lexer
 extern int yyparse();
 extern int yylex();
 extern int yynerrs;
-
+extern codegen* generate;

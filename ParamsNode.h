@@ -10,7 +10,7 @@ class ParamsNode : public StmtNode
 {
     public:
         ParamsNode()
-		{}
+		{m_parOffset = 0;}
         string toString()
 		{
 			if(m_params.size() > 0)
@@ -40,6 +40,21 @@ class ParamsNode : public StmtNode
 			return base;
 		}
         
+		void GenerateCode()
+		{
+			for(ParamNode *param : m_params)
+			{
+				param->GenerateCode();
+				m_parOffset += param->GetSize();
+			}
+		}
+		
+		int GetParamsOffset()
+		{
+			return m_parOffset;
+		}
+		
     private:
         list<ParamNode*> m_params;
+		int m_parOffset;
 };

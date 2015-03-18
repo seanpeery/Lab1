@@ -40,6 +40,12 @@ class ParamsSpecNode : public StmtNode
 			base = m_offset;
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			for(ParamSpecNode * param : m_params)
+				param->GenerateCode();
+		}
         
     private:
         list<ParamSpecNode*> m_params;

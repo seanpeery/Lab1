@@ -21,6 +21,16 @@ class PrintNode: public StmtNode
 		    m_expr->ComputeOffsets(base);
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			if(m_expr->GetBaseType() == "float")
+				generate->EmitString("printf(\"%6.4f\\n\",");
+			else
+				generate->EmitString("printf(\"%d\\n\",");
+			m_expr->GenerateCode();
+			generate->EmitString(");\n");
+		}
     private:
         ExprNode* m_expr;
 };

@@ -31,6 +31,25 @@ class IfNode: public StmtNode
 			m_stmt2->ComputeOffsets(base);
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			string tempStr = generate->GenerateLabel();
+			string endStr = generate->GenerateLabel();
+			
+			generate->EmitString("if(!");
+			m_expr->GenerateCode();
+			generate->EmitString(") goto " + tempStr + ";\n");
+			if(m_stmt1 != nullptr)
+			{
+				m_stmt1->GenerateCode();
+				generate->EmitString("goto " + endStr + ";\n");
+			}
+			generate->EmitString(tempStr + ":\n");
+			if(m_stmt2 != nullptr)
+				m_stmt2->GenerateCode();
+			generate->EmitString(endStr + ":\n");
+		}
     
     private:
         ExprNode* m_expr;

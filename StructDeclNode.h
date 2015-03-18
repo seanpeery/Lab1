@@ -58,7 +58,12 @@ class StructDeclNode : public DeclNode
 		{
 			return m_identifier->GetSize();
 		}
-    
+		
+		void GenerateCode()
+		{
+			if(m_decls != nullptr)
+				m_decls->GenerateCode();
+		}
     private:
         map<string,cSymbol*>* m_symTable;
         DeclsNode* m_decls;

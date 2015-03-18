@@ -5,7 +5,10 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "codegen.h"
 using std::string;
+
+extern codegen* generate;
 
 class cAstNode
 {
@@ -22,6 +25,11 @@ class cAstNode
             while((base % 4) != 0)
                 base++;
             return base;
+        }
+		
+		virtual void GenerateCode()
+        {
+            generate->EmitString("/ntest/n");
         }
 		
     protected:

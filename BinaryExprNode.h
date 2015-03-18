@@ -37,7 +37,33 @@ class BinaryExprNode : public ExprNode
 			
 			return base;
 		}
-    
+		
+		double GetValue()
+		{
+
+			if(m_oper == '+')
+				return m_lhs->GetValue() + m_rhs->GetValue();				
+			else if(m_oper == '-')
+				return m_lhs->GetValue() - m_rhs->GetValue();
+			else if(m_oper =='*')
+				return m_lhs->GetValue() * m_rhs->GetValue();
+			else if(m_oper == '/')
+				return m_lhs->GetValue() / m_rhs->GetValue();
+			else if(m_oper == '%')
+				return fmod(m_lhs->GetValue(), m_rhs->GetValue());
+			return 0;
+		}
+
+		void GenerateCode()
+		{
+			generate->EmitString("(");
+			m_lhs->GenerateCode();
+			generate->EmitString(&m_oper);
+			m_rhs->GenerateCode();
+			generate->EmitString(") ");
+		}
+	
+	
     private:
         ExprNode* m_rhs;
         char m_oper;

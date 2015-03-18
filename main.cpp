@@ -13,17 +13,17 @@
 
 extern cAstNode *yyast_root;
 cSymbolTable * symbolTableRoot;
-
+codegen * generate;
 int main(int argc, char **argv)
 {
     symbolTableRoot = cSymbolTable::GetInstance();
-   
+	generate = new codegen();
     std::cout << "Sean Peery" << std::endl;
    
     const char *outfile_name;
     int result = 0;
     
-    std::streambuf *cout_buf = std::cout.rdbuf();
+    //std::streambuf *cout_buf = std::cout.rdbuf();
 
     if (argc > 1)
     {
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
         std::cerr << "ERROR: Unable to open file " << outfile_name << "\n";
         exit(-1);
     }
-    std::cout.rdbuf(output.rdbuf());
+    //std::cout.rdbuf(output.rdbuf());
 
     result = yyparse();
     
@@ -60,6 +60,9 @@ int main(int argc, char **argv)
 			//std::cout << "hello";
 			yyast_root->ComputeOffsets(0);
             output << yyast_root->toString() << std::endl;
+			generate->InitOutput("langout.c");
+            yyast_root->GenerateCode();
+            generate->FinalizeOutput();
         }
 		else
 		{
@@ -68,7 +71,7 @@ int main(int argc, char **argv)
     }
 
     output.close();
-    std::cout.rdbuf(cout_buf);
+    //std::cout.rdbuf(cout_buf);
     return result;
    
 }

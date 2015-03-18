@@ -23,6 +23,11 @@ class ScanNode: public StmtNode
 		    m_expr->ComputeOffsets(base);
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			m_expr->GenerateCode();
+		}
     
     private:
         ExprNode* m_expr;

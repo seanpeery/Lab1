@@ -22,6 +22,19 @@ class WhileNode: public StmtNode
 			m_expr->ComputeOffsets(base);
 			return base;
 		}
+		void GenerateCode()
+		{
+			string tempStr = generate->GenerateLabel();
+			string endStr = generate->GenerateLabel();
+			generate->EmitString(tempStr + ":\n");
+			generate->EmitString("if(!");
+			m_expr->GenerateCode();
+			generate->EmitString(") goto " + endStr + ";\n");
+			m_stmt->GenerateCode();
+			generate->EmitString("goto " + tempStr + ";\n");
+			generate->EmitString(endStr + ":\n");
+			
+		}
     
     private:
         ExprNode* m_expr;

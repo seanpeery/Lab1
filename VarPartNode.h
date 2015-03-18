@@ -56,7 +56,10 @@ class VarPartNode : public ExprNode
 		{
 			return m_identifier->GetSymbol();
 		}
-        
+        double GetValue()
+		{
+			return 0;
+		}
     private:
         cSymbol* m_identifier;
         ArrayValNode* m_array;

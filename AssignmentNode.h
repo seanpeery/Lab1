@@ -56,6 +56,43 @@ class AssignmentNode : public StmtNode
 			return base;
 		}
 
+		void GenerateCode()
+		{
+			int offset = 0;
+			offset = m_lhs->GetOffset();
+			
+			FuncCallNode* func = nullptr;
+			try
+			{
+				func = dynamic_cast<FuncCallNode*>(m_rhs);
+			}
+			catch(int e)
+			{
+				//Not a function
+			}
+			
+			if(func != nullptr)
+				m_rhs->GenerateCode();
+
+			if(m_lhs->GetBaseType() == "float")
+				generate->EmitString("FLOAT_VAL(Frame_Pointer + " + std::to_string(offset) + ") = ");
+			else
+				generate->EmitString("INT_VAL(Frame_Pointer + "+ std::to_string(offset) + ") = ");
+			
+
+			if(func != nullptr)
+			{
+				if(func->GetBaseType() == "float")
+					generate->EmitString("Temp_F");
+				else
+					generate->EmitString("Temp");
+			}
+			else
+				m_rhs->GenerateCode();
+
+			generate->EmitString(";\n");
+		}
+		
     private:
         VarRefNode* m_lhs;
         ExprNode* m_rhs;

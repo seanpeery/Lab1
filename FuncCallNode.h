@@ -42,6 +42,22 @@ class FuncCallNode : public StmtNode, public ExprNode
 			m_params->ComputeOffsets(base);
 			return base;
 		}
+		
+		void GenerateCode()
+		{
+			generate->EmitString("INT_VAL(Stack_Pointer) = Frame_Pointer;\n");
+			generate->StackSizeUp(4);
+			if(m_params != nullptr)
+				m_params->GenerateCode();
+			generate->EmitString("Frame_Pointer = Stack_Pointer -" + std::to_string(m_params->GetParamsOffset()) + ";\n");
+			generate->EmitString(m_identifier->GetSymbol() + "();\n");
+			generate->StackSizeDown(4);
+			generate->EmitString("Frame_Pointer = INT_VAL(Stack_Pointer);\n");
+		}
+		double GetValue()
+		{
+			return 0;
+		}
     
     private:
         cSymbol* m_identifier;
